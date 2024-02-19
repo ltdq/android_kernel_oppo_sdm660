@@ -285,7 +285,7 @@ void *perf_aux_output_begin(struct perf_output_handle *handle,
 	 * the aux buffer is in perf_mmap_close(), about to get freed.
 	 */
 	if (!atomic_read(&rb->aux_mmap_count))
-		goto err_put;
+		goto err;
 
 	/*
 	 * Nesting is not supported for AUX area, make sure nested
@@ -638,6 +638,9 @@ struct ring_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
 
 	size = sizeof(struct ring_buffer);
 	size += nr_pages * sizeof(void *);
+
+	if (order_base_2(size) >= PAGE_SHIFT+MAX_ORDER)
+		goto fail;
 
 	rb = kzalloc(size, GFP_KERNEL);
 	if (!rb)
