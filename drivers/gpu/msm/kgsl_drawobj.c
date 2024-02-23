@@ -39,10 +39,6 @@
 /* Xiaori.Yuan@PSW.MM.Display.GPU.Log, 2017/11/25  Add for keylog */
 #include <soc/oppo/mmkey_log.h>
 #endif /* VENDOR_EDIT */
-#ifdef VENDOR_EDIT
-/* Wenhua.Leng@PSW.MM.Display.LCD.Machine, 2019/02/11,add for mm dcs for gpu. */
-#include <soc/oppo/oppo_kevent_feedback.h>
-#endif /*VENDOR_EDIT*/
 
 /*
  * Define an kmem cache for the memobj & sparseobj structures since we
@@ -133,10 +129,6 @@ static void syncobj_timer(unsigned long data)
 	struct kgsl_drawobj_sync_event *event;
 	unsigned int i;
 	unsigned long flags;
-#ifdef VENDOR_EDIT
-/*Wenhua.Leng@PSW.MM.Display.LCD.Machine, 2019/02/11,add for mm kevent gpu.*/
-	unsigned char payload[100] = "";
-#endif /*VENDOR_EDIT*/
 
 	if (syncobj == NULL || drawobj->context == NULL)
 		return;
@@ -183,11 +175,6 @@ static void syncobj_timer(unsigned long data)
 /* Xiaori.Yuan@PSW.MM.Display.GPU.Log, 2017/11/25  Add for keylog */
 	mm_keylog_write("gpu exception\n", "possible gpu syncpoint deadlock\n", TYPE_GPU_EXCEPTION);
 #endif /* VENDOR_EDIT */
-#ifdef VENDOR_EDIT
-/* Wenhua.Leng@PSW.MM.Display.LCD.Machine, 2019/02/11,add for mm kevent gpu. */
-		scnprintf(payload, sizeof(payload), "EventID@@%d$$GPU_fault@@syncpoint deadlock",OPPO_MM_DIRVER_FB_EVENT_ID_GPU_FENCE_TIMEOUT);
-		upload_mm_kevent_feedback_data(OPPO_MM_DIRVER_FB_EVENT_MODULE_DISPLAY,payload);
-#endif /*VENDOR_EDIT*/
 	dev_err(device->dev, "--gpu syncpoint deadlock print end--\n");
 }
 
