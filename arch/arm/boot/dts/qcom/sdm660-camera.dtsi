@@ -55,8 +55,13 @@
 			"csiphy_timer_src_clk", "csiphy_timer_clk",
 			"camss_ispif_ahb_clk", "csiphy_clk_src", "csiphy_clk",
 			"csiphy_ahb2crif";
+		/*modified by hufeng for can not take 20MP picture*/
+		/*
 		qcom,clock-rates = <0 0 0 0 0 0 310000000 0 0 269333333 0
 			0 200000000 0 0>;
+		*/
+		qcom,clock-rates = <0 0 0 0 0 0 384000000 0 0 269333333 0
+			0 384000000 0 0>;
 		status = "ok";
 	};
 
@@ -93,8 +98,13 @@
 			"csiphy_timer_src_clk", "csiphy_timer_clk",
 			"camss_ispif_ahb_clk", "csiphy_clk_src", "csiphy_clk",
 			"csiphy_ahb2crif";
+		/*modified by hufeng for can not take 20MP picture*/
+		/*
 		qcom,clock-rates = <0 0 0 0 0 0 310000000 0 0 269333333 0
 			0 200000000 0 0>;
+		*/
+		qcom,clock-rates = <0 0 0 0 0 0 384000000 0 0 269333333 0
+			0 384000000 0 0>;
 		status = "ok";
 	};
 
@@ -131,8 +141,13 @@
 			"csiphy_timer_src_clk", "csiphy_timer_clk",
 			"camss_ispif_ahb_clk", "csiphy_clk_src", "csiphy_clk",
 			"csiphy_ahb2crif";
+		/*modified by hufeng for can not take 20MP picture*/
+		/*
 		qcom,clock-rates = <0 0 0 0 0 0 310000000 0 0 269333333 0
 			0 200000000 0 0>;
+		*/
+		qcom,clock-rates = <0 0 0 0 0 0 384000000 0 0 269333333 0
+			0 384000000 0 0>;
 		status = "ok";
 	};
 
@@ -172,7 +187,11 @@
 			"ispif_ahb_clk", "csi_src_clk", "csiphy_clk_src",
 			"csi_clk", "csi_ahb_clk", "csi_rdi_clk",
 			"csi_pix_clk", "cphy_csid_clk";
+		/*modified by hufeng for can not take 20MP picture*/
+		/*
 		qcom,clock-rates = <0 0 0 0 0 0 0 310000000 200000000
+		*/
+		qcom,clock-rates = <0 0 0 0 0 0 0 384000000 384000000
 			0 0 0 0 0>;
 		status = "ok";
 	};
@@ -213,7 +232,11 @@
 			"ispif_ahb_clk", "csi_src_clk", "csiphy_clk_src",
 			"csi_clk", "csi_ahb_clk", "csi_rdi_clk",
 			"csi_pix_clk", "cphy_csid_clk";
+		/*modified by hufeng for can not take 20MP picture*/
+		/*
 		qcom,clock-rates = <0 0 0 0 0 0 0 310000000 200000000
+		*/
+		qcom,clock-rates = <0 0 0 0 0 0 0 256000000 256000000
 			 0 0 0 0 0>;
 		status = "ok";
 	};
@@ -254,7 +277,12 @@
 			"ispif_ahb_clk", "csi_src_clk", "csiphy_clk_src",
 			"csi_clk", "csi_ahb_clk", "csi_rdi_clk",
 			"csi_pix_clk", "cphy_csid_clk";
+		/*modified by hufeng for can not take 20MP picture*/
+		/*
 		qcom,clock-rates = <0 0 0 0 0 0 0 310000000 200000000
+			 0 0 0 0 0>;
+		*/
+		qcom,clock-rates = <0 0 0 0 0 0 0 256000000 256000000
 			 0 0 0 0 0>;
 		status = "ok";
 	};
@@ -295,7 +323,12 @@
 			"ispif_ahb_clk", "csi_src_clk", "csiphy_clk_src",
 			"csi_clk", "csi_ahb_clk", "csi_rdi_clk",
 			"csi_pix_clk", "cphy_csid_clk";
+		/*modified by hufeng for can not take 20MP picture*/
+		/*
 		qcom,clock-rates = <0 0 0 0 0 0 0 310000000 200000000
+			 0 0 0 0 0>;
+		*/
+		qcom,clock-rates = <0 0 0 0 0 0 0 256000000 256000000
 			 0 0 0 0 0>;
 		status = "ok";
 	};
@@ -514,8 +547,7 @@
 		camss-vdd-supply = <&gdsc_camss_top>;
 		smmu-vdd-supply = <&gdsc_bimc_smmu>;
 		qcom,vdd-names = "vdd", "camss-vdd", "smmu-vdd";
-		clocks = <&clock_mmss MMSS_THROTTLE_CAMSS_AXI_CLK>,
-			<&clock_rpmcc MMSSNOC_AXI_CLK>,
+		clocks = <&clock_rpmcc MMSSNOC_AXI_CLK>,
 			<&clock_mmss MMSS_MNOC_AHB_CLK>,
 			<&clock_mmss MMSS_BIMC_SMMU_AHB_CLK>,
 			<&clock_mmss MMSS_BIMC_SMMU_AXI_CLK>,
@@ -528,17 +560,16 @@
 			<&clock_mmss MMSS_CAMSS_VFE_VBIF_AHB_CLK>,
 			<&clock_mmss MMSS_CAMSS_VFE_VBIF_AXI_CLK>,
 			<&clock_mmss MMSS_CAMSS_CSI_VFE0_CLK>;
-		clock-names = "mmss_throttle_camss_axi_clk", "mmssnoc_axi",
-			"mnoc_ahb_clk", "bimc_smmu_ahb_clk",
-			"bimc_smmu_axi_clk", "camss_ahb_clk",
-			"camss_top_ahb_clk", "vfe_clk_src",
+		clock-names = "mmssnoc_axi", "mnoc_ahb_clk",
+			"bimc_smmu_ahb_clk", "bimc_smmu_axi_clk",
+			"camss_ahb_clk", "camss_top_ahb_clk", "vfe_clk_src",
 			"camss_vfe_clk", "camss_vfe_stream_clk",
 			"camss_vfe_ahb_clk", "camss_vfe_vbif_ahb_clk",
 			"camss_vfe_vbif_axi_clk",
 			"camss_csi_vfe_clk";
-		qcom,clock-rates = <0 0 0 0 0 0 0 404000000 0 0 0 0 0 0
-					0 0 0 0 0 0 0 480000000 0 0 0 0 0 0
-					0 0 0 0 0 0 0 576000000 0 0 0 0 0 0>;
+		qcom,clock-rates = <0 0 0 0 0 0 404000000 0 0 0 0 0 0
+					0 0 0 0 0 0 480000000 0 0 0 0 0 0
+					0 0 0 0 0 0 576000000 0 0 0 0 0 0>;
 		status = "ok";
 		qos-entries = <8>;
 		qos-regs = <0x404 0x408 0x40c 0x410 0x414 0x418
@@ -597,8 +628,7 @@
 		camss-vdd-supply = <&gdsc_camss_top>;
 		smmu-vdd-supply = <&gdsc_bimc_smmu>;
 		qcom,vdd-names = "vdd", "camss-vdd", "smmu-vdd";
-		clocks = <&clock_mmss MMSS_THROTTLE_CAMSS_AXI_CLK>,
-			<&clock_rpmcc MMSSNOC_AXI_CLK>,
+		clocks = <&clock_rpmcc MMSSNOC_AXI_CLK>,
 			<&clock_mmss MMSS_MNOC_AHB_CLK>,
 			<&clock_mmss MMSS_BIMC_SMMU_AHB_CLK>,
 			<&clock_mmss MMSS_BIMC_SMMU_AXI_CLK>,
@@ -611,17 +641,16 @@
 			<&clock_mmss MMSS_CAMSS_VFE_VBIF_AHB_CLK>,
 			<&clock_mmss MMSS_CAMSS_VFE_VBIF_AXI_CLK>,
 			<&clock_mmss MMSS_CAMSS_CSI_VFE1_CLK>;
-		clock-names = "mmss_throttle_camss_axi_clk", "mmssnoc_axi",
-			"mnoc_ahb_clk", "bimc_smmu_ahb_clk",
-			"bimc_smmu_axi_clk", "camss_ahb_clk",
-			"camss_top_ahb_clk", "vfe_clk_src",
+		clock-names = "mmssnoc_axi", "mnoc_ahb_clk",
+			"bimc_smmu_ahb_clk", "bimc_smmu_axi_clk",
+			"camss_ahb_clk", "camss_top_ahb_clk", "vfe_clk_src",
 			"camss_vfe_clk", "camss_vfe_stream_clk",
 			"camss_vfe_ahb_clk", "camss_vfe_vbif_ahb_clk",
 			"camss_vfe_vbif_axi_clk",
 			"camss_csi_vfe_clk";
-		qcom,clock-rates = <0 0 0 0 0 0 0 404000000 0 0 0 0 0 0
-					0 0 0 0 0 0 0 480000000 0 0 0 0 0 0
-					0 0 0 0 0 0 0 576000000 0 0 0 0 0 0>;
+		qcom,clock-rates = <0 0 0 0 0 0 404000000 0 0 0 0 0 0
+					0 0 0 0 0 0 480000000 0 0 0 0 0 0
+					0 0 0 0 0 0 576000000 0 0 0 0 0 0>;
 		status = "ok";
 		qos-entries = <8>;
 		qos-regs = <0x404 0x408 0x40c 0x410 0x414 0x418

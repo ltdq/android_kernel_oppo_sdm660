@@ -45,6 +45,9 @@
 			qcom,kpdpwr-sw-debounce;
 			qcom,system-reset;
 			qcom,store-hard-reset-reason;
+			//#ifdef VENDOR_EDIT //yixue.ge@bsp.drv add for use hard reset reason
+			qcom,clear-warm-reset;
+			//#endif
 
 			qcom,pon_1 {
 				qcom,pon-type = <0>;
@@ -85,7 +88,12 @@
 			gpio@c100 {
 				reg = <0xc100 0x100>;
 				qcom,pin-num = <2>;
-				status = "disabled";
+//#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2017/01/23, sjc Modify for charging */
+				//status = "disabled";
+				status = "ok";
+				//qcom,mode = <3>; //ANA_PASS_THRU
+				qcom,master-en = <0>; //disable GPIO
+//#endif
 			};
 
 			gpio@c200 {
@@ -165,7 +173,12 @@
 			#address-cells = <1>;
 			#size-cells = <1>;
 			qcom,qpnp-rtc-write = <0>;
-			qcom,qpnp-rtc-alarm-pwrup = <0>;
+		   //#ifndef VENDOR_EDIT
+           /*Tong.han@BSP.group.TP Modified for rtc restart phone. 2014-08-12*/
+           //  qcom,qpnp-rtc-alarm-pwrup = <0>;  
+	       //#else
+ 		     qcom,qpnp-rtc-alarm-pwrup = <1>;
+	       //#endif
 
 			qcom,pm660_rtc_rw@6000 {
 				reg = <0x6000 0x100>;
@@ -312,6 +325,19 @@
 				qcom,fast-avg-setup = <0>;
 				qcom,cal-val = <0>;
 			};
+
+//#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2017/01/23, sjc Add for charging */
+			chan@12 {
+				label = "gpio2_adc";
+				reg = <0x12>; //channel for GPIO2
+				qcom,decimation = <2>;
+				qcom,pre-div-channel-scaling = <0>; //1:1 scaling
+				qcom,calibration-type = "absolute";
+				qcom,scale-function = <0>;
+				qcom,hw-settle-time = <2>;
+				qcom,fast-avg-setup = <0>;
+			};
+//#endif
 		};
 
 		pm660_charger: qcom,qpnp-smb2 {
@@ -320,6 +346,9 @@
 			#size-cells = <1>;
 
 			qcom,pmic-revid = <&pm660_revid>;
+//#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2017/01/18, sjc Add for charging */
+			qcom,micro-usb;
+//#endif
 
 			io-channels = <&pm660_rradc 8>,
 				      <&pm660_rradc 10>,
@@ -330,12 +359,112 @@
 					   "usbin_i",
 					   "usbin_v";
 
-			qcom,wipower-max-uw = <5000000>;
+//#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2017/01/20, sjc Delete for charging */
+			//qcom,wipower-max-uw = <5000000>;
+//#endif
 			dpdm-supply = <&qusb_phy0>;
+//#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2017/05/12, sjc Modify for BOB noise*/
+			pm660l_bob-supply = <&pm660l_bob>;
+//#endif
 
 			qcom,thermal-mitigation
 					= <3000000 2500000 2000000 1500000
 						1000000 500000>;
+
+//#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2016/12/26, sjc Add for charging */
+			//for smb2:
+			qcom,usb-icl-ua = <2000000>;
+			qcom,fcc-max-ua = <2000000>;
+			//qcom,fv-max-uv = <4373000>;
+			qcom,hvdcp-disable;
+			qcom,pm660chg-vadc = <&pm660_vadc>;
+			//qcom,otg-cl-ua = <2000000>;
+
+			//for oppo chg framework:
+			qcom,input_current_charger_ma = <2000>;
+			qcom,input_current_usb_ma = <500>;
+			qcom,input_current_led_ma = <1200>;
+			qcom,input_current_led_ma_forcmcc = <500>;
+			qcom,input_current_camera_ma = <1200>;
+			//qcom,input_current_led_ma_overtemp = <900>;
+			qcom,overtemp_bat_decidegc = <350>;
+			qcom,iterm-disabled = <0>;
+			qcom,iterm-ma = <165>;
+			qcom,recharge-mv = <100>;
+			qcom,batt_capacity_mah = <3150>;
+
+			qcom,removed_bat_decidegc = <190>;  			/*<-19C*/
+
+			qcom,cold_bat_decidegc = <30>;  /*-3C~0C*/
+			qcom,temp_cold_vfloat_mv = <3980>;
+			qcom,temp_cold_fastchg_current_ma = <400>;				/* 300~364 */ /*0.15C=495*/
+
+			qcom,little_cold_bat_decidegc = <0>;	/*0C~5C*/
+			qcom,temp_little_cold_vfloat_mv = <4373>;
+			qcom,temp_little_cold_fastchg_current_ma_high = <1450>;	/*0.95*0.5C 1503.5~1567.5*/
+			qcom,temp_little_cold_fastchg_current_ma_low = <850>;	/*0.95*0.3C 876.5~940.5*/
+			qcom,temp_little_cold_fastchg_current_ma = <850>;		/* 0.15C = 495*/
+
+			qcom,cool_bat_decidegc = <50>;	/*5C~12C*/
+			qcom,temp_cool_vfloat_mv = <4373>;
+			qcom,temp_cool_fastchg_current_ma_high = <2000>;			/* 0.25C = 825 */ /*0.95*0.7C 2130.5~2194.5*/
+			qcom,temp_cool_fastchg_current_ma_low = <1450>;			/* 0.15C = 495 */ /*0.95*0.5C 1503.5~1567.5*/
+
+			qcom,little_cool_bat_decidegc = <120>;	/*12C~16C*/
+			qcom,temp_little_cool_vfloat_mv = <4373>;
+			qcom,temp_little_cool_fastchg_current_ma = <2100>;		/* 0.45C = 1485 */ /*1C*/
+
+			qcom,normal_bat_decidegc = <160>;	/*16C~45C*/
+			qcom,temp_normal_fastchg_current_ma = <2100>;
+			qcom,temp_normal_vfloat_mv_normalchg = <4373>;
+			qcom,temp_normal_vfloat_mv_voocchg = <4373>;
+
+			qcom,warm_bat_decidegc = <440>;		/*45C~53C*/
+			qcom,temp_warm_vfloat_mv = <4080>;
+			qcom,temp_warm_fastchg_current_ma = <850>;				/* 0.25C = 825 */ /*0.3C 876.5~940.5*/
+
+			qcom,hot_bat_decidegc = <530>;
+
+			qcom,non_standard_vfloat_mv = <3980>;
+			qcom,non_standard_fastchg_current_ma = <512>;
+
+			qcom,short_c_bat_cv_mv = <4330>;
+			qcom,short_c_bat_vfloat_mv = <3800>;
+			qcom,short_c_bat_fastchg_current_ma = <512>;
+
+			qcom,cold_vfloat_sw_limit = <3930>;
+			qcom,little_cold_vfloat_sw_limit = <4320>;
+			qcom,cool_vfloat_sw_limit = <4320>;
+			qcom,little_cool_vfloat_sw_limit = <4320>;
+			qcom,normal_vfloat_sw_limit = <4320>;
+			qcom,warm_vfloat_sw_limit = <4030>;
+			qcom,non_standard_vfloat_sw_limit = <3930>;
+			qcom,short_c_bat_vfloat_sw_limit = <3750>;
+
+			qcom,max_chg_time_sec = <36000>;
+			qcom,charger_hv_thr = <5800>;
+			qcom,charger_lv_thr = <3400>;
+			qcom,vbatt_full_thr = <4400>;
+			qcom,vbatt_hv_thr = <4500>;
+			qcom,vfloat_step_mv = <15>;
+
+			//for control:
+			//qcom,suspend_after_full;
+			qcom,check_batt_full_by_sw;
+			qcom,external_gauge;
+			qcom,vooc_project;
+			qcom,chg_ctrl_by_lcd;
+			qcom,chg_ctrl_by_camera;
+
+			qcom,chargerid_switch-gpio = <&tlmm 65 0x00>;
+			qcom,usbid-gpio = <&tlmm 49 0x00>;
+			pinctrl-names = "chargerid_switch_active", "chargerid_switch_sleep", "chargerid_switch_default", "usbid_active", "usbid_sleep";
+			pinctrl-0 = <&chargerid_switch_active>;
+			pinctrl-1 = <&chargerid_switch_sleep>;
+			pinctrl-2 = <&chargerid_switch_default>;
+			pinctrl-3 = <&usbid_active>;
+			pinctrl-4 = <&usbid_sleep>;
+//#endif //VENDOR_EDIT
 
 			qcom,chgr@1000 {
 				reg = <0x1000 0x100>;
@@ -470,7 +599,9 @@
 					  "msg-tx-failed",
 					  "msg-tx-discarded",
 					  "msg-rx-discarded";
-
+//#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2017/01/18, sjc Add for charging */
+					  status = "disabled";
+//#endif
 			qcom,default-sink-caps = <5000 3000>, /* 5V @ 3A */
 						 <9000 3000>; /* 9V @ 3A */
 		};
@@ -555,7 +686,13 @@
 			qcom,fg-esr-timer-asleep = <256 256>;
 			qcom,fg-esr-timer-charging = <0 96>;
 			qcom,cycle-counter-en;
-			status = "okay";
+//#ifndef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2017/02/14, sjc Modify for charging */
+			//status = "okay";
+			status= "disabled";
+//#endif
+//#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2017/02/11, sjc Add for charging */
+			qcom,fg-chg-term-current = <150>;
+//#endif
 
 			qcom,fg-batt-soc@4000 {
 				status = "okay";
@@ -608,6 +745,8 @@
 			};
 		};
 
+//#ifndef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2017/02/14, sjc Delete for charging */
+/*
 		bcl@4200 {
 			compatible = "qcom,msm-bcl-lmh";
 			reg = <0x4200 0xff>,
@@ -621,6 +760,8 @@
 			qcom,vbat-polling-delay-ms = <100>;
 			qcom,ibat-polling-delay-ms = <100>;
 		};
+*/
+//#endif
 	};
 
 	qcom,pm660@1 {
@@ -638,7 +779,10 @@
 			qcom,pmic-revid = <&pm660_revid>;
 			qcom,pmic-misc = <&pm660_misc>;
 			qcom,misc-clk-trim-error-reg = <0xf3>;
-			qcom,actuator-type = "lra";
+			//#ifdef VENDOR_EDIT
+			//rendong.shi@Bsp.boot.device,2016/12/21, Added for vibrator			
+			qcom,actuator-type = "erm";
+			//#endif
 			qcom,play-mode = "direct";
 			qcom,vmax-mv = <3200>;
 			qcom,ilim-ma = <800>;
@@ -646,12 +790,19 @@
 			qcom,wave-play-rate-us = <6667>;
 			qcom,int-pwm-freq-khz = <505>;
 			qcom,sc-deb-cycles = <8>;
-			qcom,en-brake;
+			//#ifdef VENDOR_EDIT
+			//rendong.shi@Bsp.boot.device,2016/12/21, Added for vibrator
+			//qcom,en-brake;
+			//#endif
 			qcom,brake-pattern = [03 03 00 00];
 			qcom,lra-high-z = "opt0";
 			qcom,lra-auto-res-mode = "qwd";
 			qcom,lra-calibrate-at-eop = <0>;
 			qcom,correct-lra-drive-freq;
+			//#ifdef VENDOR_EDIT
+			//Added by Tong.han@Bsp.group.Tp for vib min time setting,2015-07-07-07
+			qcom,vib-timemin-ms = <35>;
+			//#endif /*VENDOR_EDIT*
 		};
 	};
 };

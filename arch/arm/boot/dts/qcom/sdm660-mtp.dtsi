@@ -22,8 +22,14 @@
 
 &uartblsp1dm1 {
 	status = "ok";
-	pinctrl-names = "default";
+//#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2017/04/10, sjc Modify for console */
+	//pinctrl-names = "default";
+	//pinctrl-0 = <&uart_console_active>;
+//#else
+	pinctrl-names = "default", "disable";
 	pinctrl-0 = <&uart_console_active>;
+	pinctrl-1 = <&uart_console_disable>;
+//#endif /* VENDOR_EDIT */
 };
 
 &ufsphy1 {
@@ -127,7 +133,7 @@
 //Gou shegnjun@PSW.MM.Display.LCD.Stability, 2017/11/30,
 //add for lcd gpio config
 &mdss_dsi0 {
-	qcom,dsi-pref-prim-pan = <&dsi_oppo17081samsung_ams596w401_1080_2280_cmd>;
+	qcom,dsi-pref-prim-pan = <&dsi_oppo17011samsung_ams596w401_1080_2280_cmd>;
 	pinctrl-names = "mdss_default", "mdss_sleep";
 	pinctrl-0 = <&mdss_dsi_active &mdss_te_active &mdss_exits_active &mdss_err_active &mdss_poc_1p8_active>;
 	pinctrl-1 = <&mdss_dsi_suspend &mdss_te_suspend &mdss_exits_suspend &mdss_err_suspend &mdss_poc_1p8_suspend>;
@@ -225,7 +231,7 @@
 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_labibb_amoled>;
 };
 
-&dsi_oppo17081samsung_ams596w401_1080_2280_cmd {
+&dsi_oppo17011samsung_ams596w401_1080_2280_cmd {
 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_labibb_amoled>;
 };
 //#endif /*VENDOR_EDIT*/
@@ -264,7 +270,13 @@
 
 &sdhc_2 {
 	/* device core power supply */
-	vdd-supply = <&pm660l_l5>;
+	//#ifndef VENDOR_EDIT
+//rendong.shi@Bsp.Storage.card,2016/12/21,Added for vdd_en using gpio supply 3V
+//	vdd-supply = <&pm660l_l5>;
+//#else
+	vdd-supply = <&sdhc2_vdd_vreg>;
+//#endif
+	
 	qcom,vdd-voltage-level = <2950000 2950000>;
 	qcom,vdd-current-level = <15000 800000>;
 
@@ -272,10 +284,15 @@
 	vdd-io-supply = <&pm660l_l2>;
 	qcom,vdd-io-voltage-level = <1800000 2950000>;
 	qcom,vdd-io-current-level = <200 22000>;
-
-	pinctrl-names = "active", "sleep";
-	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
-	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+	
+//#ifndef VENDOR_EDIT
+//rendong.shi@Bsp.Storage.card,2016/12/21,Added for vdd_en using gpio supply 3V
+	pinctrl-names = "default", "active", "sleep";
+	pinctrl-0 = <&sdc2_cd_on &sim1_cd_on &sim2_cd_on>;
+	pinctrl-1 = <&sdc2_clk_on  &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
+	pinctrl-2 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+//#endif
+	
 
 	#address-cells = <0>;
 	interrupt-parent = <&sdhc_2>;
@@ -286,8 +303,10 @@
 			1 &intc 0 0 221 0
 			2 &tlmm 54 0>;
 	interrupt-names = "hc_irq", "pwr_irq", "status_irq";
-	cd-gpios = <&tlmm 54 0x1>;
-
+	//#ifndef VENDOR_EDIT
+//rendong.shi@Bsp.Storage.card,2016/12/21,Added for vdd_en using gpio supply 3V
+	cd-gpios = <&tlmm 54 0x0>;
+//#endif
 	qcom,clk-rates = <400000 20000000 25000000 50000000 100000000
 								200000000>;
 	qcom,bus-speed-mode = "SDR12", "SDR25", "SDR50", "DDR50", "SDR104";
@@ -296,6 +315,74 @@
 };
 
 &soc {
+
+/*#ifdef VENDOR_EDIT ziqing.guo@phone.bsp 2016-07-23 add for fingerprint compatibility */
+    oppo_fp_common { //Slave driver and CS ID
+        compatible = "oppo,fp_common"; //Manufacture, and Model
+        oppo,fp-id1 = <&tlmm 62 0x00>;
+        oppo,fp-id2 = <&tlmm 74 0x00>;
+        oppo,fp-id3 = <&tlmm 77 0x00>;
+        pinctrl-names = "default";
+        pinctrl-0 = <&gpio_id1_default &gpio_id2_default &gpio_id3_default>;
+    };
+    oppo_secure_common { //Slave driver and CS ID
+        compatible = "oppo,secure_common"; //Manufacture, and Model
+    };
+/*#endif VENDOR_EDIT */
+
+/*#ifdef VENDOR_EDIT ziqing.guo@phone.bsp 2015-12-20 add for fpc TEE */
+    fpc_fpc1020 { //Slave driver and CS ID
+        compatible = "fpc,fpc1020"; //Manufacture, and Model
+        fpc,irq-gpio = <&tlmm 72 0x00>;
+        fpc,vdd_en = <&tlmm 40 0x00>;
+        vdd_io-supply = <&pm660_l13>;  // 1.8V
+        pinctrl-names = "default";
+        pinctrl-0 = <&gpio_vdd_en_default &gpio_fpc_irq_default>;
+    };
+/*#endif VENDOR_EDIT */
+
+/*#ifdef VENDOR_EDIT */
+/* ziqing.guo@BSP.Fingerprint.Basic, 2017/04/19, add for goodix fingerprint 5288 */
+    goodix_fp {
+        compatible = "goodix,goodix_fp";
+        interrupt-parent = <&tlmm>;
+        interrupts = <72 0>;
+        goodix,gpio_irq = <&tlmm 72 0x1>;
+        goodix,gpio_reset = <&tlmm 20 0x0>;
+        ldo5-supply = <&pm660l_l5>;  // pm660l_l5 for goodix_fp
+        pinctrl-names = "default";
+        pinctrl-0 = <&gpio_goodix_irq_default>;
+    };
+//#endif /*VENDOR_EDIT*/
+
+/*ifdef VENDOR_EDIT*/
+//Added by Tong.han@Bsp.Group.Tp for device-info,2015-4-13
+	devinfo {
+		compatible = "oppo-devinfo";
+
+		Hw,sub_hwid_1 = <&tlmm 30 0x00>;
+		Hw,sub_hwid_2 = <&tlmm 31 0x00>;
+		HW,RFver_gpio1 = <&tlmm 43 0x00>;
+		HW,RFver_gpio2 = <&tlmm 21 0x00>;
+		HW,RFver_gpio3 = <&tlmm 28 0x00>;
+		HW,RFver_gpio4 = <&tlmm 29 0x00>;
+		pinctrl-names = "default","hw_sub_gpio_sleep","gpio_HW_ID1_pullup","gpio_HW_ID1_pulldown",
+						"gpio_HW_ID2_pullup", "gpio_HW_ID2_pulldown",
+						"gpio_HW_ID3_pullup", "gpio_HW_ID3_pulldown",
+						"gpio_HW_ID4_pullup", "gpio_HW_ID4_pulldown";
+		pinctrl-0 = <&hw_sub_gpio_active>;
+		pinctrl-1 = <&hw_sub_gpio_sleep>;
+		pinctrl-2 = <&pin_id1_set_pullup>;
+		pinctrl-3 = <&pin_id1_set_pulldown>;
+		pinctrl-4 = <&pin_id2_set_pullup>;
+		pinctrl-5 = <&pin_id2_set_pulldown>;
+		pinctrl-6 = <&pin_id3_set_pullup>;
+		pinctrl-7 = <&pin_id3_set_pulldown>;
+		pinctrl-8 = <&pin_id4_set_pullup>;
+		pinctrl-9 = <&pin_id4_set_pulldown>;
+	};
+/*endif*/
+
 	qcom,msm-ssc-sensors {
 		compatible = "qcom,msm-ssc-sensors";
 	};
@@ -313,8 +400,8 @@
 &i2c_1 {
 	//Wanghao@BSP.group 2017-11-01 add for enable i2c_1
 	status = "okay";
-	synaptics17081@20 {
-		compatible = "synaptics-s3706";
+	synaptics17011@20 {
+		compatible = "synaptics-s3508";
 		reg = <0x20>;
 
 		/* Interrupt && Irq-gpio */
@@ -333,17 +420,15 @@
 		pinctrl-0 = <&ts_int_active &ts_reset_active>;
 
 		touchpanel,max-num-support = <10>;
-		touchpanel,tx-rx-num = <16 33>;
-		touchpanel,panel-coords = <1080 2280>;
-		touchpanel,display-coords = <1080 2280>;
+		touchpanel,tx-rx-num = <15 30>;
+		touchpanel,panel-coords = <1080 2160>;
+		touchpanel,display-coords = <1080 2160>;
 
 		/* SW Support Feature Control */
 		black_gesture_support;
 		edge_limit_support;
-		//spurious_fingerprint_support;
-		charger_pump_support;
-		game_switch_support;
-
+		smart_gesture_support;
+		//pressure_report_support;
 		/*
 		 *Virtual Key Config:
 		 *1:touchpanel,button-type: <virtualkey_type  supportted_button-map>
@@ -363,14 +448,104 @@
 };
 //#endif
 
+//#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2016/12/20, sjc Add for charging */
 &i2c_2 {
-	status = "ok";
-	smb1351-charger@1d {
-		compatible = "qcom,smb1351-charger";
-		reg = <0x1d>;
-		qcom,parallel-charger;
-		qcom,float-voltage-mv = <4400>;
-		qcom,recharge-mv = <100>;
-		qcom,parallel-en-pin-polarity = <1>;
+	bq27541-battery@55 {
+		status = "okay";
+		compatible = "oppo,bq27541-battery";
+		reg = <0x55>;
+		qcom,modify-soc-smooth;
+	};
+
+	stm8s_fastcg@26{
+		status = "okay";
+		compatible = "oppo,stm8s-fastcg";
+		reg = <0x26>;
+		qcom,oppo_batt_4400mv;
+        qcom,vooc-low-temp = <120>;
+		qcom,vooc-fw-type = <4>;
+
+		pinctrl-names = "switch1_act_switch2_act", "switch1_sleep_switch2_sleep",
+						"switch1_act_switch3_act", "switch1_sleep_switch3_sleep",
+						"switch1_act_switch2_sleep", "switch1_sleep_switch2_act",
+						"clock_active","clock_sleep",
+						"data_active","data_sleep",
+						"reset_active","reset_sleep";
+		pinctrl-0 = <&charging_switch1_active>;
+		pinctrl-1 = <&charging_switch1_sleep >;
+		pinctrl-2 = <&charging_switch1_active>;
+		pinctrl-3 = <&charging_switch1_sleep >;
+		pinctrl-4 = <&charging_switch1_active>;
+		pinctrl-5 = <&charging_switch1_sleep>;
+		pinctrl-6 = <&charging_clock_active >;
+		pinctrl-7 = <&charging_clock_sleep >;
+		pinctrl-8 = <&charging_data_active >;
+		pinctrl-9 = <&charging_data_sleep >;
+		pinctrl-10 = <&charging_reset_active >;
+		pinctrl-11 = <&charging_reset_sleep >;
+
+		qcom,charging_switch1-gpio = <&tlmm 75 0x00>;
+		//qcom,charging_switch2-gpio = <&tlmm 113 0x00>;
+		//qcom,charging_switch3-gpio = <&tlmm 38 0x00>;
+
+		qcom,charging_reset-gpio = <&tlmm 55 0x00>;
+		qcom,charging_clock-gpio = <&tlmm 51 0x00>;
+		qcom,charging_data-gpio = <&tlmm 44 0x00>;
+	};
+
+	pic16f_fastcg@25{
+		status = "okay";
+		compatible = "oppo,pic16f-fastcg";
+		reg = <0x25>;
+
+		pinctrl-names = "switch1_act_switch2_act", "switch1_sleep_switch2_sleep",
+						"switch1_act_switch3_act", "switch1_sleep_switch3_sleep",
+						"switch1_act_switch2_sleep", "switch1_sleep_switch2_act",
+						"clock_active","clock_sleep",
+						"data_active","data_sleep",
+						"reset_active","reset_sleep";
+		pinctrl-0 = <&charging_switch1_active>;
+		pinctrl-1 = <&charging_switch1_sleep >;
+		pinctrl-2 = <&charging_switch1_active>;
+		pinctrl-3 = <&charging_switch1_sleep >;
+		pinctrl-4 = <&charging_switch1_active>;
+		pinctrl-5 = <&charging_switch1_sleep>;
+		pinctrl-6 = <&charging_clock_active >;
+		pinctrl-7 = <&charging_clock_sleep >;
+		pinctrl-8 = <&charging_data_active >;
+		pinctrl-9 = <&charging_data_sleep >;
+		pinctrl-10 = <&charging_reset_active >;
+		pinctrl-11 = <&charging_reset_sleep >;
+
+		qcom,charging_switch1-gpio = <&tlmm 75 0x00>;
+		//qcom,charging_switch2-gpio = <&tlmm 113 0x00>;
+		//qcom,charging_switch3-gpio = <&tlmm 38 0x00>;
+
+		qcom,charging_reset-gpio = <&tlmm 55 0x00>;
+		qcom,charging_clock-gpio = <&tlmm 51 0x00>;
+		qcom,charging_data-gpio = <&tlmm 44 0x00>;
 	};
 };
+//#endif
+
+//#ifdef VENDOR_EDIT
+/*xiang.fei@PSW.MM.AudioDriver.Machine, 2017/01/13, Add for ak4376&tfa9890 config*/
+&i2c_6 { /*  BLSP2 QUP2 */
+	status = "okay";
+	ak4376@10 {
+		compatible = "akm,ak4376";
+		reg = <0x10>;
+		ak4376,reset-gpio = <&tlmm 76 0x00>;
+		audio-vdd-enable-gpio = <&tlmm 60 0x00>;
+		status = "okay";
+	};
+
+	tfa98xx@36 {
+		compatible = "nxp,tfa98xx";
+		reg = <0x36>;
+		nxp,rst-ctrl-gpio = <&tlmm 80 0x00>;
+		tfa9890_vdd-supply = <&pm660_l13>;
+		status = "okay";
+	};
+};
+//#endif /* VENDOR_EDIT */

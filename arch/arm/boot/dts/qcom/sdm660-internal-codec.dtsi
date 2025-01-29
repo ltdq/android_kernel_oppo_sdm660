@@ -70,6 +70,21 @@
 	status = "disabled";
 };
 
+//#ifdef VENDOR_EDIT
+/*xiang.fei@PSW.MM.AudioDriver.Machine, 2017/01/26, Add for audio config*/
+&cdc_sdw_gpios {
+	status = "disabled";
+};
+
+&wsa_spkr_en1 {
+	status = "disabled";
+};
+
+&wsa_spkr_en2 {
+	status = "disabled";
+};
+//#endif /* VENDOR_EDIT */
+
 &int_codec {
 	status = "okay";
 };
@@ -78,6 +93,11 @@
 	status = "okay";
 };
 
+//#ifndef VENDOR_EDIT
+/*xiang.fei@PSW.MM.AudioDriver.Machine, 2017/01/26, Delete for audio config*/
+/*
 &msm_sdw_codec {
 	status = "okay";
 };
+*/
+//#endif /* VENDOR_EDIT */

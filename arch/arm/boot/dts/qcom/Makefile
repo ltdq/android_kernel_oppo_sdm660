@@ -296,6 +296,8 @@ dtb-$(CONFIG_ARCH_SDM630) += sdm630-rumi.dtb \
 	sdm455-rcm.dtb \
 	sdm455-internal-codec-rcm.dtb
 
+dtb-y += sdm660-pm660a-mtp-17011.dtb
+
 ifeq ($(CONFIG_ARM64),y)
 always          := $(dtb-y)
 always          += $(dtbo-y)
