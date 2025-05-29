@@ -133,7 +133,6 @@
 //Gou shegnjun@PSW.MM.Display.LCD.Stability, 2017/11/30,
 //add for lcd gpio config
 &mdss_dsi0 {
-	qcom,dsi-pref-prim-pan = <&dsi_oppo16051samsung_ams596w401_1080_2280_cmd>;
 	pinctrl-names = "mdss_default", "mdss_sleep";
 	pinctrl-0 = <&mdss_dsi_active &mdss_te_active &mdss_exits_active &mdss_err_active &mdss_poc_1p8_active>;
 	pinctrl-1 = <&mdss_dsi_suspend &mdss_te_suspend &mdss_exits_suspend &mdss_err_suspend &mdss_poc_1p8_suspend>;
@@ -231,9 +230,6 @@
 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_labibb_amoled>;
 };
 
-&dsi_oppo16051samsung_ams596w401_1080_2280_cmd {
-	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_labibb_amoled>;
-};
 //#endif /*VENDOR_EDIT*/
 &dsi_lgd_incell_sw49106_fhd_video {
 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_wled";
@@ -341,21 +337,6 @@
     };
 /*#endif VENDOR_EDIT */
 
-/*#ifdef VENDOR_EDIT */
-/* ziqing.guo@BSP.Fingerprint.Basic, 2017/04/19, add for goodix fingerprint 5288 */
-/* wenbo.hui@archermind.Fingerprint, 2019/07/24, remove the scrap config */
-  /*goodix_fp {
-        compatible = "goodix,goodix_fp";
-        interrupt-parent = <&tlmm>;
-        interrupts = <72 0>;
-        goodix,gpio_irq = <&tlmm 72 0x1>;
-        goodix,gpio_reset = <&tlmm 20 0x0>;
-        ldo5-supply = <&pm660l_l5>;  // pm660l_l5 for goodix_fp
-        pinctrl-names = "default";
-        pinctrl-0 = <&gpio_goodix_irq_default>;
-    };*/
-//#endif /*VENDOR_EDIT*/
-
 /*ifdef VENDOR_EDIT*/
 //Added by Tong.han@Bsp.Group.Tp for device-info,2015-4-13
 	devinfo {
@@ -365,7 +346,6 @@
 		pinctrl-names = "default","hw_sub_gpio_sleep";
 		pinctrl-0 = <&hw_sub_gpio_active>;
 		pinctrl-1 = <&hw_sub_gpio_sleep>;
-
 	};
 /*endif*/
 
@@ -382,59 +362,6 @@
 	qcom,battery-data = <&mtp_batterydata>;
 };
 
-//#ifdef VENDOR_EDIT
-&i2c_1 {
-	//Wanghao@BSP.group 2017-11-01 add for enable i2c_1
-	status = "okay";
-	synaptics16051@20 {
-		compatible = "synaptics-s3508";
-		reg = <0x20>;
-
-		/* Interrupt && Irq-gpio */
-		interrupt-parent = <&tlmm>;
-		interrupts = <67 0x2008>;
-
-		/* Power Config */
-		//enable2v8_gpio = <&tlmm 15 0x1>;
-		vdd_2v8-supply = <&touchpanel_vdd>;
-		vcc_1v8-supply = <&pm660_l14>;
-
-		/* Other HW Resource */
-		irq-gpio = <&tlmm 67 0x2008>;
-		reset-gpio = <&tlmm 66 0x1>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&ts_int_active &ts_reset_active>;
-
-		touchpanel,max-num-support = <10>;
-		touchpanel,tx-rx-num = <17 30>;
-		touchpanel,panel-coords = <1080 1920>;
-		touchpanel,display-coords = <1080 1920>;
-
-		/* SW Support Feature Control */
-		black_gesture_support;
-		edge_limit_support;
-		spurious_fingerprint_support;
-		smart_gesture_support;
-
-		/*
-		 *Virtual Key Config:
-		 *1:touchpanel,button-type: <virtualkey_type  supportted_button-map>
-		 *virtualkey_type:
-		 *Type 1: using board_properties
-		 *Type 2: using same IC (button zone&& touch zone are seprate)
-		 *Type 3: using diffrent IC (button zone&& touch zone are seprate)
-		 *Type 4: No need of virtual key process
-		 *supportted_button-map:select|menu|home|back
-		 *
-		 *2:touchpanel,button-map
-		 *type (X1,Y1)(X2,Y2)(X3,Y3)(Width_X,Hight_Y)--Only when button-type is 0
-		 */
-		touchpanel,button-type = <2 0x05>;
-		touchpanel.button-TRx = <1 2>;
-	};
-};
-//#endif
-
 //#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2016/12/20, sjc Add for charging */
 &i2c_2 {
 	bq27541-battery@55 {
@@ -450,7 +377,6 @@
 		reg = <0x26>;
 		qcom,oppo_batt_4400mv;
         qcom,vooc-low-temp = <120>;
-		qcom,vooc-fw-type = <5>;
 
 		pinctrl-names = "switch1_act_switch2_act", "switch1_sleep_switch2_sleep",
 						"switch1_act_switch3_act", "switch1_sleep_switch3_sleep",

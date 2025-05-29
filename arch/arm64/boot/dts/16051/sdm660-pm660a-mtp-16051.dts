@@ -23,6 +23,8 @@
 #include "sdm660-internal-codec.dtsi"
 //#endif /* VENDOR_EDIT */
 
+#include "dsi-panel-oppo16051samsung_ams596w401_1080_2280_cmd.dtsi"
+
 / {
 	model = "Qualcomm Technologies, Inc. SDM 660 PM660 + PM660A MTP";
 	compatible = "qcom,sdm660-mtp", "qcom,sdm660", "qcom,mtp";
@@ -30,6 +32,16 @@
 	qcom,pmic-id = <0x0001001b 0x0001011a 0x0 0x0>,
 			<0x0001001b 0x0002001a 0x0 0x0>,
 			<0x0001001b 0x0202001a 0x0 0x0>;
+	
+	firmware: firmware {
+		android {
+			fstab {
+				vendor {
+					mnt_flags = "async_discard";
+				};
+			};
+		};
+	};
 };
 
 //#ifdef VENDOR_EDIT
@@ -44,7 +56,7 @@
 };
 
 &mdss_dsi0 {
-	qcom,dsi-pref-prim-pan = <&dsi_rm67195_amoled_fhd_cmd>;
+	qcom,dsi-pref-prim-pan = <&dsi_oppo16051samsung_ams596w401_1080_2280_cmd &dsi_rm67195_amoled_fhd_cmd>;
 	oledb-supply = <&pm660a_oledb>;
 	lab-supply = <&lab_regulator>;
 	ibb-supply = <&ibb_regulator>;
@@ -57,6 +69,170 @@
 	ibb-supply = <&ibb_regulator>;
 };
 
+
+&dsi_oppo16051samsung_ams596w401_1080_2280_cmd {
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_labibb_amoled>;
+};
+
 &tavil_snd {
 	qcom,msm-mbhc-moist-cfg = <0>, <0>, <3>;
+};
+
+&soc {
+	i2c_1: i2c@c175000 {
+		status = "okay";
+	};
+};
+
+&i2c_1 {
+	status = "okay";
+	synaptics16051@20 {
+		compatible = "synaptics-s3508";
+		reg = <0x20>;
+
+		/* Interrupt && Irq-gpio */
+		interrupt-parent = <&tlmm>;
+		interrupts = <67 0x2008>;
+
+		/* Power Config */
+		//enable2v8_gpio = <&tlmm 15 0x1>;
+		vdd_2v8-supply = <&touchpanel_vdd>;
+		vcc_1v8-supply = <&pm660_l14>;
+
+		/* Other HW Resource */
+		irq-gpio = <&tlmm 67 0x2008>;
+		reset-gpio = <&tlmm 66 0x1>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&ts_int_active &ts_reset_active>;
+
+		touchpanel,max-num-support = <10>;
+		touchpanel,tx-rx-num = <17 30>;
+		touchpanel,panel-coords = <1080 1920>;
+		touchpanel,display-coords = <1080 1920>;
+
+		/* SW Support Feature Control */
+		black_gesture_support;
+		edge_limit_support;
+		spurious_fingerprint_support;
+		smart_gesture_support;
+
+		/*
+		 *Virtual Key Config:
+		 *1:touchpanel,button-type: <virtualkey_type  supportted_button-map>
+		 *virtualkey_type:
+		 *Type 1: using board_properties
+		 *Type 2: using same IC (button zone&& touch zone are seprate)
+		 *Type 3: using diffrent IC (button zone&& touch zone are seprate)
+		 *Type 4: No need of virtual key process
+		 *supportted_button-map:select|menu|home|back
+		 *
+		 *2:touchpanel,button-map
+		 *type (X1,Y1)(X2,Y2)(X3,Y3)(Width_X,Hight_Y)--Only when button-type is 0
+		 */
+		touchpanel,button-type = <2 0x05>;
+		touchpanel.button-TRx = <1 2>;
+	};
+};
+
+&i2c_2 {
+	stm8s_fastcg@26{
+		qcom,vooc-fw-type = <5>;
+	};
+};
+
+&dsi_oppo16051samsung_s6e3fa3_1080p_cmd {
+	qcom,mdss-dsi-panel-timings-phy-v2 = [24 1f 08 09 05 03 04 a0
+		24 1f 08 09 05 03 04 a0
+		24 1f 08 09 05 03 04 a0
+		24 1f 08 09 05 03 04 a0
+		24 1a 08 09 05 03 04 a0];
+};
+
+&dsi_oppo17011samsung_sofeg01_s_1080p_cmd {
+	qcom,mdss-dsi-panel-timings-phy-v2 = [
+		24 1F 08 09 05 03 04 a0
+		24 1F 08 09 05 03 04 a0
+		24 1F 08 09 05 03 04 a0
+		24 1F 08 09 05 03 04 a0
+		24 1B 08 09 05 03 04 a0];
+};
+
+&dsi_oppo16051samsung_ams596w401_1080_2280_cmd {
+	qcom,mdss-dsi-panel-timings-phy-v2 = [
+		20 20 09 0C 06 03 04 a0
+		20 20 09 0C 06 03 04 a0
+		20 20 09 0C 06 03 04 a0
+		20 20 09 0C 06 03 04 a0
+		20 1E 09 0A 06 03 04 a0];
+};
+
+
+&cci {
+	eeprom4: qcom,eeprom@4 {
+		reg = <3>;
+	};
+    
+	eeprom5: qcom,eeprom@5 {
+		cell-index = <5>;
+		reg = <0x5>;
+		compatible = "qcom,eeprom";
+		qcom,eeprom-name = "s5k2t7sx_cat24c64";
+		position = <0x02>;
+		qcom,slave-addr = <0xa2>;
+		qcom,num-blocks = <1>;
+		qcom,i2c-freq-mode =<1>;
+		qcom,page0 = <0 0 0 0 0 0>;
+		qcom,poll0 = <0 0 0 0 0 0>;
+		qcom,saddr0 = <0xa2>;
+		qcom,mem0 = <8192 0x0000 2 0 1 0>;
+		cam_vio-supply = <&pm660_l11>;
+		qcom,cam-vreg-name = "cam_vio";
+		qcom,cam-vreg-min-voltage = <0>;
+		qcom,cam-vreg-max-voltage = <0>;
+		qcom,cam-vreg-op-mode = <0>;
+		qcom,gpio-no-mux = <0>;
+		pinctrl-names = "cam_default", "cam_suspend";
+		pinctrl-0 = <&cam_sensor_mclk1_active
+				 &cam_sensor_rear2_active>;
+		pinctrl-1 = <&cam_sensor_mclk1_suspend
+				 &cam_sensor_rear2_suspend>;
+		gpios = <&pm660l_gpios 3 0>;
+		qcom,gpio-vio = <0>;
+		qcom,gpio-req-tbl-num = <0>;
+		qcom,gpio-req-tbl-flags = <0>;
+		qcom,gpio-req-tbl-label = "CAM_VIO";
+		qcom,cam-power-seq-type = "sensor_vreg";
+		qcom,cam-power-seq-val = "cam_vio";
+		qcom,cam-power-seq-cfg-val = <1>;
+		qcom,cam-power-seq-delay = <1>;
+		qcom,cci-master = <1>;
+		status = "ok";
+		clocks = <&clock_mmss MCLK1_CLK_SRC>,
+			<&clock_mmss MMSS_CAMSS_MCLK1_CLK>;
+		clock-names = "cam_src_clk", "cam_clk";
+		qcom,clock-rates = <24000000 0>;
+	};
+
+	qcom,camera@0 {
+		qcom,eeprom-src = <&eeprom4>;
+	};
+
+	qcom,camera@2 {
+		qcom,eeprom-src = <&eeprom3 &eeprom5>;
+	};
+};
+
+&spmi_bus {
+	qcom,pm660@0 {
+		pm660_charger: qcom,qpnp-smb2 {
+			qcom,iterm-ma = <150>;
+			qcom,batt_capacity_mah = <2900>;
+			qcom,temp_little_cold_fastchg_current_ma_high = <1823>;	/*0.95*0.5C 1503.5~1567.5*/
+			qcom,temp_little_cold_fastchg_current_ma_low = <1106>;	/*0.95*0.3C 876.5~940.5*/
+			qcom,temp_little_cold_fastchg_current_ma = <1106>;		/* 0.15C = 495*/
+			qcom,temp_cool_fastchg_current_ma_high = <2100>;			/* 0.25C = 825 */ /*0.95*0.7C 2130.5~2194.5*/
+			qcom,temp_cool_fastchg_current_ma_low = <1823>;				/* 0.15C = 495 */ /*0.95*0.5C 1503.5~1567.5*/
+			qcom,temp_warm_fastchg_current_ma = <1106>;				/* 0.25C = 825 */ /*0.3C 876.5~940.5*/
+		};
+	};
 };

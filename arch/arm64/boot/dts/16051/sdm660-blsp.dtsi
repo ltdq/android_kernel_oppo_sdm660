@@ -55,10 +55,6 @@
 		pinctrl-names = "i2c_active", "i2c_sleep";
 		pinctrl-0 = <&i2c_1_active>;
 		pinctrl-1 = <&i2c_1_sleep>;
-		//#ifdef VENDOR_EDIT
-		//Wanghao@BSP.group 2017-1-18 add for enable i2c_1
-		status = "okay";
-		//#endif
 	};
 
 	i2c_2: i2c@c176000 { /* BLSP1 QUP2 */

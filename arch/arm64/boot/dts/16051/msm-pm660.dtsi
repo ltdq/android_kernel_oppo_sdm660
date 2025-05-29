@@ -389,9 +389,7 @@
 			//qcom,input_current_led_ma_overtemp = <900>;
 			qcom,overtemp_bat_decidegc = <350>;
 			qcom,iterm-disabled = <0>;
-			qcom,iterm-ma = <150>;
 			qcom,recharge-mv = <100>;
-			qcom,batt_capacity_mah = <2900>;
 
 			qcom,removed_bat_decidegc = <190>;  			/*<-19C*/
 
@@ -401,15 +399,10 @@
 
 			qcom,little_cold_bat_decidegc = <0>;	/*0C~5C*/
 			qcom,temp_little_cold_vfloat_mv = <4373>;
-			qcom,temp_little_cold_fastchg_current_ma_high = <1823>;	/*0.95*0.5C 1503.5~1567.5*/
-			qcom,temp_little_cold_fastchg_current_ma_low = <1106>;	/*0.95*0.3C 876.5~940.5*/
-			qcom,temp_little_cold_fastchg_current_ma = <1106>;		/* 0.15C = 495*/
-
+			
 			qcom,cool_bat_decidegc = <50>;	/*5C~12C*/
 			qcom,temp_cool_vfloat_mv = <4373>;
-			qcom,temp_cool_fastchg_current_ma_high = <2100>;			/* 0.25C = 825 */ /*0.95*0.7C 2130.5~2194.5*/
-			qcom,temp_cool_fastchg_current_ma_low = <1823>;			/* 0.15C = 495 */ /*0.95*0.5C 1503.5~1567.5*/
-
+			
 			qcom,little_cool_bat_decidegc = <120>;	/*12C~16C*/
 			qcom,temp_little_cool_vfloat_mv = <4373>;
 			qcom,temp_little_cool_fastchg_current_ma = <2100>;		/* 0.45C = 1485 */ /*1C*/
@@ -421,8 +414,7 @@
 
 			qcom,warm_bat_decidegc = <440>;		/*45C~53C*/
 			qcom,temp_warm_vfloat_mv = <4080>;
-			qcom,temp_warm_fastchg_current_ma = <1106>;				/* 0.25C = 825 */ /*0.3C 876.5~940.5*/
-
+			
 			qcom,hot_bat_decidegc = <530>;
 
 			qcom,non_standard_vfloat_mv = <3980>;
