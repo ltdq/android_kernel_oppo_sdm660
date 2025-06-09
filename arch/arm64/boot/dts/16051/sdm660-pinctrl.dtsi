@@ -1522,26 +1522,18 @@
 		cam_actuator_vaf_active: cam_actuator_vaf_active {
 			/* ACTUATOR POWER */
 			mux {
-				//#ifndef VENDOR_EDIT
-				/*oppo hufeng 20170213 modify for rear camera af config*/
-				/*
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio50";
-				*/
-				//#else
+#endif
 				pins = "gpio1";
-				//#endif
 				function = "gpio";
 			};
 
 			config {
-				//#ifndef VENDOR_EDIT
-				/*oppo hufeng 20170213 modify for rear camera af config*/
-				/*
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio50";
-				*/
-				//#else
+#endif
 				pins = "gpio1";
-				//#endif
 				bias-disable; /* No PULL */
 				drive-strength = <2>; /* 2 MA */
 			};
@@ -1550,31 +1542,22 @@
 		cam_actuator_vaf_suspend: cam_actuator_vaf_suspend {
 			/* ACTUATOR POWER */
 			mux {
-				//#ifndef VENDOR_EDIT
-				/*oppo hufeng 20170213 modify for rear camera af config*/
-				/*
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio50";
-				*/
-				//#else
+#endif
 				pins = "gpio1";
-				//#endif
 				function = "gpio";
 			};
 
 			config {
-				//#ifndef VENDOR_EDIT
-				/*oppo hufeng 20170213 modify for rear camera af config*/
-				/*
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio50";
-				*/
-				//#else
+#endif
 				pins = "gpio1";
-				//#endif
 				bias-pull-down; /* PULL DOWN */
 				drive-strength = <2>; /* 2 MA */
 			};
 		};
-		/*#ifdef VENDOR_EDIT*/
 		/*oppo hufeng 20170122 add for second rear camera af*/
 		cam_actuator_vaf2_active: cam_actuator_vaf2_active {
 			/* ACTUATOR POWER */
@@ -1603,7 +1586,6 @@
 				drive-strength = <2>; /* 2 MA */
 			};
 		};
-		/*#endif*/
 		cam_sensor_mclk0_active: cam_sensor_mclk0_active {
 			/* MCLK0 */
 			mux {
@@ -1637,12 +1619,20 @@
 		cam_sensor_rear_active: cam_sensor_rear_active {
 			/* RESET, STANDBY */
 			mux {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio48"/*,"gpio44" sjc delete for charging*/;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio48","gpio50";/*jindian.guan modify for camera*/
+#endif
 				function = "gpio";
 			};
 
 			config {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio48"/*,"gpio44" sjc delete for charging*/;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio48","gpio50";/*jindian.guan modify for camera*/
+#endif
 				bias-disable; /* No PULL */
 				drive-strength = <2>; /* 2 MA */
 			};
@@ -1651,12 +1641,20 @@
 		cam_sensor_rear_suspend: cam_sensor_rear_suspend {
 			/* RESET, STANDBY */
 			mux {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio48"/*,"gpio44" sjc delete for charging*/;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio48","gpio50";/*jindian.guan modify for camera*/
+#endif
 				function = "gpio";
 			};
 
 			config {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio48"/*,"gpio44" sjc delete for charging*/;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio48","gpio50";/*jindian.guan modify for camera*/
+#endif
 				bias-disable; /* No PULL */
 				drive-strength = <2>; /* 2 MA */
 			};
@@ -1695,12 +1693,20 @@
 		cam_sensor_rear2_active: cam_sensor_rear2_active {
 			/* RESET, STANDBY */
 			mux {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio46"/*,"gpio51"*/;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio46","gpio35";
+#endif
 				function = "gpio";
 			};
 
 			config {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio46"/*,"gpio51"*/;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio46","gpio35";
+#endif
 				bias-disable; /* No PULL */
 				drive-strength = <2>; /* 2 MA */
 			};
@@ -1709,11 +1715,19 @@
 		cam_sensor_rear2_suspend: cam_sensor_rear2_suspend {
 			/* RESET, STANDBY */
 			mux {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio46"/*,"gpio51"*/;
-				function = "gpio";
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio46","gpio35";
+#endif				
+                                function = "gpio";
 			};
 			config {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio46"/*,"gpio51"*/;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio46","gpio35";
+#endif
 				bias-disable; /* No PULL */
 				drive-strength = <2>; /* 2 MA */
 			};
@@ -1752,12 +1766,20 @@
 		cam_sensor_front_active: cam_sensor_front_active {
 			/* RESET  VANA*/
 			mux {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio47"/*, "gpio44" sjc delete for charging*/;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio47", "gpio64","gpio35";
+#endif
 				function = "gpio";
 			};
 
 			config {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio47"/*, "gpio44" sjc delete for charging*/;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio47", "gpio64","gpio35";
+#endif
 				bias-disable; /* No PULL */
 				drive-strength = <2>; /* 2 MA */
 			};
@@ -1766,12 +1788,20 @@
 		cam_sensor_front_suspend: cam_sensor_front_suspend {
 			/* RESET */
 			mux {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio47";
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio47", "gpio64","gpio35";
+#endif
 				function = "gpio";
 			};
 
 			config {
+#if defined(CONFIG_OPPO_16051)
 				pins = "gpio47";
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+                                pins = "gpio47", "gpio64","gpio35";
+#endif
 				bias-disable; /* No PULL */
 				drive-strength = <2>; /* 2 MA */
 			};
@@ -1991,6 +2021,59 @@
 					bias-pull-down; /* pull down */
 				};
 			};
+#if defined(CONFIG_OPPO_16103)
+                        mdss_exits_active: mdss_exits_active {
+				mux {
+					pins = "gpio73";
+					function = "gpio";
+				};
+				config {
+					pins = "gpio73";
+					drive-strength = <2>; /* 2 mA */
+					bias-disable = <0>; /* no pull */
+					input-enable;
+				};
+			};
+
+			mdss_exits_suspend: mdss_exits_suspend {
+				mux {
+					pins = "gpio73";
+					function = "gpio";
+				};
+				config {
+					pins = "gpio73";
+					drive-strength = <2>; /* 2 mA */
+					bias-pull-down; /* pull down */
+					input-enable;
+				};
+			};
+
+			mdss_err_active: mdss_err_active {
+				mux {
+					pins = "gpio56";
+					function = "gpio";
+				};
+				config {
+					pins = "gpio56";
+					drive-strength = <2>; /* 2 mA */
+					bias-pull-down; /* pull down*/
+					input-enable;
+				};
+			};
+
+			mdss_err_suspend: mdss_err_suspend {
+				mux {
+					pins = "gpio56";
+					function = "gpio";
+				};
+				config {
+					pins = "gpio56";
+					drive-strength = <2>; /* 2 mA */
+					bias-pull-down; /* pull down */
+					input-enable;
+				};
+			};
+#endif
 		};
 
 		pmx_mdss_te {
@@ -2044,9 +2127,7 @@
 				drive-strength = <2>;
 			};
 		};
-
-//Gou shengjun@PSW.MM.Display.LCD.Stability, 2017/11/30,
-//add for lcd gpio config
+#if defined(CONFIG_OPPO_16051)
 		mdss_exits_active: mdss_exits_active {
 			mux {
 				pins = "gpio73";
@@ -2124,7 +2205,7 @@
 				output-low;
 			};
 		};
-//#endif /*VENDOR_EDIT*/
+#endif
 
 		mdss_dp_usbplug_cc_active: mdss_dp_usbplug_cc_active {
 			mux {
@@ -2364,7 +2445,7 @@
 					bias-pull-down; /*PULL DOWN*/
 				};
 			};
-			
+#if defined(CONFIG_OPPO_16051)
 			shortc_active: shortc_active {
 				mux {
 					pins = "gpio60";
@@ -2378,11 +2459,9 @@
 					bias-pull-up; /*PULL UP*/
 				};
 			};
+#endif
 		};
-//#endif /* VENDOR_EDIT */
-
-//#ifdef VENDOR_EDIT
-//Xing.xiong@BSP.TP, 2017/11/21, Add for ship mode
+#if defined(CONFIG_OPPO_16051)
 		pmx_ship_sleep {
 			 ship_sleep: ship_sleep {
 				mux {
@@ -2412,6 +2491,6 @@
 				};
 			};
 		};
-//#endif
+#endif
 	};
 };
