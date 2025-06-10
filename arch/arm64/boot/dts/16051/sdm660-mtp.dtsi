@@ -427,7 +427,7 @@
 	qcom,battery-data = <&mtp_batterydata>;
 };
 
-#if defined defined(CONFIG_OPPO_16051)
+#if defined(CONFIG_OPPO_16051)
 &i2c_1 {
 	//Wanghao@BSP.group 2017-11-01 add for enable i2c_1
 	status = "okay";

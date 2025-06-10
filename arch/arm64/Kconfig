@@ -1251,4 +1251,4 @@ endif
 
 source "lib/Kconfig"
 
-source "boot/Kconfig"
+source "arch/arm64/boot/Kconfig"

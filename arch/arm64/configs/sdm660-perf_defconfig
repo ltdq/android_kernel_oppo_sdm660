@@ -891,3 +891,6 @@ CONFIG_CRYPTO_MANAGER2=y
 #/* Kui.Zhang@PSW.BSP.Kernel.Performance, 2018-11-07, add process reclaim.*/
 CONFIG_PROCESS_RECLAIM=y
 #endif
+
+# dts
+CONFIG_OPPO_16051=y
