@@ -401,14 +401,25 @@
 
 			qcom,little_cold_bat_decidegc = <0>;	/*0C~5C*/
 			qcom,temp_little_cold_vfloat_mv = <4373>;
+#if defined(CONFIG_OPPO_16051)
 			qcom,temp_little_cold_fastchg_current_ma_high = <1823>;	/*0.95*0.5C 1503.5~1567.5*/
 			qcom,temp_little_cold_fastchg_current_ma_low = <1106>;	/*0.95*0.3C 876.5~940.5*/
 			qcom,temp_little_cold_fastchg_current_ma = <1106>;		/* 0.15C = 495*/
+#elif defined(CONFIG_OPPO_16103)
+			qcom,temp_little_cold_fastchg_current_ma_high = <1350>;	/*0.95*0.5C 1503.5~1567.5*/
+			qcom,temp_little_cold_fastchg_current_ma_low = <800>;	/*0.95*0.3C 876.5~940.5*/
+			qcom,temp_little_cold_fastchg_current_ma = <800>;		/* 0.15C = 495*/
+#endif
 
 			qcom,cool_bat_decidegc = <50>;	/*5C~12C*/
 			qcom,temp_cool_vfloat_mv = <4373>;
+#if defined(CONFIG_OPPO_16051)
 			qcom,temp_cool_fastchg_current_ma_high = <2100>;			/* 0.25C = 825 */ /*0.95*0.7C 2130.5~2194.5*/
 			qcom,temp_cool_fastchg_current_ma_low = <1823>;			/* 0.15C = 495 */ /*0.95*0.5C 1503.5~1567.5*/
+#elif defined(CONFIG_OPPO_16103)
+			qcom,temp_cool_fastchg_current_ma_high = <1900>;			/* 0.25C = 825 */ /*0.95*0.7C 2130.5~2194.5*/
+			qcom,temp_cool_fastchg_current_ma_low = <1350>;			/* 0.15C = 495 */ /*0.95*0.5C 1503.5~1567.5*/
+#endif	
 
 			qcom,little_cool_bat_decidegc = <120>;	/*12C~16C*/
 			qcom,temp_little_cool_vfloat_mv = <4373>;
@@ -419,9 +430,15 @@
 			qcom,temp_normal_vfloat_mv_normalchg = <4373>;
 			qcom,temp_normal_vfloat_mv_voocchg = <4373>;
 
+#if defined(CONFIG_OPPO_16051)
 			qcom,warm_bat_decidegc = <440>;		/*45C~53C*/
 			qcom,temp_warm_vfloat_mv = <4080>;
 			qcom,temp_warm_fastchg_current_ma = <1106>;				/* 0.25C = 825 */ /*0.3C 876.5~940.5*/
+#elif defined(CONFIG_OPPO_16103)
+			qcom,warm_bat_decidegc = <450>;		/*45C~53C*/
+			qcom,temp_warm_vfloat_mv = <4080>;
+			qcom,temp_warm_fastchg_current_ma = <800>;				/* 0.25C = 825 */ /*0.3C 876.5~940.5*/
+#endif
 
 			qcom,hot_bat_decidegc = <530>;
 

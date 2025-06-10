@@ -1,0 +1,11 @@
+config CONFIG_OPPO_16051
+	bool "Build OPPO 16051 dtbs"
+    default n
+
+config CONFIG_OPPO_16103
+	bool "Build OPPO 16103 dtbs"
+    default n
+
+config CONFIG_OPPO_16118
+	bool "Build OPPO 16118 dtbs"
+    default n

@@ -1,5 +1,7 @@
 #dtb-$(CONFIG_OPPO_COMMON_SOFT) += sdm660-pm660a-mtp-17011.dtb
-dtb-y += sdm660-pm660a-mtp-16051.dtb
+obj-$(CONFIG_OPPO_16051) += sdm660-pm660a-mtp-16051.dtb
+obj-$(CONFIG_OPPO_16103) += sdm660-pm660a-mtp-16103.dtb
+obj-$(CONFIG_OPPO_16118) += sdm660-pm660a-mtp-16118.dtb
 
 ifeq ($(CONFIG_ARM64),y)
 always          := $(dtb-y)

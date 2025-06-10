@@ -254,7 +254,11 @@
 				qcom,peer-bam = <0>;
 				qcom,peer-bam-physical-address = <0x06064000>;
 				qcom,src-bam-pipe-index = <0>;
+#if defined(CONFIG_OPPO_16051)
 				qcom,dst-bam-pipe-index = <3>;
+#elif defined(CONFIG_OPPO_16103)
+				qcom,dst-bam-pipe-index = <2>;
+#endif
 				qcom,data-fifo-offset = <0x0>;
 				qcom,data-fifo-size = <0x1800>;
 				qcom,descriptor-fifo-offset = <0x1800>;

@@ -151,13 +151,21 @@
 		qcom,resource-name = "ldob";
 		qcom,resource-id = <6>;
 		qcom,regulator-type = <0>;
+#if defined(CONFIG_OPPO_16051)
 		status = "disabled";
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+        status = "ok";
+#endif
 
 		regulator-l6 {
 			compatible = "qcom,rpm-smd-regulator";
 			regulator-name = "pm660l_l6";
 			qcom,set = <3>;
+#if defined(CONFIG_OPPO_16051)
 			status = "disabled";
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+            status = "ok";
+#endif
 		};
 	};
 

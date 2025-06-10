@@ -14,8 +14,8 @@ dts-dirs += mediatek
 #dts-dirs += qcom
 #else
 dts-dirs += 16051
-dts-dirs += 16103
-dts-dirs += 16118
+#dts-dirs += 16103
+#dts-dirs += 16118
 dts-dirs += 17011
 dts-dirs += 17021
 dts-dirs += 17081

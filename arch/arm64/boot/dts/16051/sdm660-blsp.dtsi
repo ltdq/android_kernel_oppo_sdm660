@@ -55,10 +55,11 @@
 		pinctrl-names = "i2c_active", "i2c_sleep";
 		pinctrl-0 = <&i2c_1_active>;
 		pinctrl-1 = <&i2c_1_sleep>;
-		//#ifdef VENDOR_EDIT
-		//Wanghao@BSP.group 2017-1-18 add for enable i2c_1
+#if defined(CONFIG_OPPO_16051) || defined(CONFIG_OPPO_16103)
 		status = "okay";
-		//#endif
+#elif defined(CONFIG_OPPO_16118)
+        status = "disabled";
+#endif
 	};
 
 	i2c_2: i2c@c176000 { /* BLSP1 QUP2 */
@@ -230,7 +231,11 @@
 		pinctrl-names = "i2c_active", "i2c_sleep";
 		pinctrl-0 = <&i2c_8_active>;
 		pinctrl-1 = <&i2c_8_sleep>;
+#if defined(CONFIG_OPPO_16051) || defined(CONFIG_OPPO_16118)
 		status = "disabled";
+#elif defined(CONFIG_OPPO_16103)
+        status = "okay";
+#endif
 	};
 
 	spi_1: spi@c175000 { /* BLSP1 QUP1 */

@@ -370,13 +370,14 @@
 			reg-names = "dsi_ctrl", "dsi_phy", "mmss_misc_phys";
 
 			qcom,timing-db-mode;
-			/*#ifdef VENDOR_EDIT*/
-			/* remove by hongbo.dai@camera 20171116, this ldo only use for camera */
-			/* wqhd-vddio-supply = <&pm660_l11>; */
-			/*#endif*/
+#if defined(CONFIG_OPPO_16051)
 			vdda-3p3-supply = <&pm660l_l6>;
 			lab-supply = <&lcdb_ldo_vreg>;
 			ibb-supply = <&lcdb_ncp_vreg>;
+#elif defined(CONFIG_OPPO_16103) || (CONFIG_OPPO_16118)
+                        oled-vdda-supply = <&pm660_l14>;
+			vddio-supply = <&pm660l_l6>;
+#endif
 			qcom,mdss-mdp = <&mdss_mdp>;
 			qcom,mdss-fb-map = <&mdss_fb0>;
 
@@ -415,10 +416,9 @@
 			reg-names = "dsi_ctrl", "dsi_phy", "mmss_misc_phys";
 
 			qcom,timing-db-mode;
-			/*#ifdef VENDOR_EDIT*/
-			/* remove by hongbo.dai@camera 20171116, this ldo only use for camera */
-			/* wqhd-vddio-supply = <&pm660_l11>; */
-			/*#endif*/
+#if defined(CONFIG_OPPO_16103) || (CONFIG_OPPO_16118)
+			wqhd-vddio-supply = <&pm660_l11>;
+#endif
 			lab-supply = <&lcdb_ldo_vreg>;
 			ibb-supply = <&lcdb_ncp_vreg>;
 			qcom,mdss-mdp = <&mdss_mdp>;
@@ -627,3 +627,39 @@
 };
 
 #include "sdm660-mdss-panels.dtsi"
+#if defined(CONFIG_OPPO_16103)
+&pm660_gpios {
+	gpio@c200 {		//3
+		status = "ok";
+		qcom,mode = <1>;
+		qcom,pull = <5>;
+		qcom,invert = <1>;
+		qcom,vin-sel = <0>;
+		qcom,src-sel = <0>;
+		qcom,master-en = <1>;
+		qcom,out-strength = <2>;
+	};
+
+	gpio@ca00 {		//11
+		status = "ok";
+		qcom,mode = <1>;
+		qcom,pull = <5>;
+		qcom,invert = <1>;
+		qcom,vin-sel = <0>;
+		qcom,src-sel = <0>;
+		qcom,master-en = <1>;
+		qcom,out-strength = <2>;
+	};
+
+	gpio@cc00 {		//13
+		status = "ok";
+		qcom,mode = <1>;
+		qcom,pull = <5>;
+		qcom,invert = <1>;
+		qcom,vin-sel = <0>;
+		qcom,src-sel = <0>;
+		qcom,master-en = <1>;
+		qcom,out-strength = <2>;
+	};
+};
+#endif

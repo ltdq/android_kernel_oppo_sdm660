@@ -286,7 +286,11 @@
 			qcom,loop-auto-gm-en;
 			qcom,pmic-revid = <&pm660l_revid>;
 			qcom,auto-calibration-enable;
+#if defined(CONFIG_OPPO_16051)
 			status = "ok";
+#elif defined(CONFIG_OPPO_16103)
+			status = "disabled";
+#endif
 		};
 
 		flash_led: qcom,leds@d300 {
@@ -314,12 +318,12 @@
 				qcom,max-current = <1500>;
 				qcom,default-led-trigger = "flash0_trigger";
 				qcom,id = <0>;
-				/*#ifdef VENDOR_EDIT*/
-				/*modify by hongbo.dai@camera,20171213 for dual flash LED*/
-				/*qcom,current-ma = <1000>;*/
-				/*#else*/
+#if defined(CONFIG_OPPO_16051)
 				qcom,current-ma = <750>;
-				/*#endif*/
+#elif defined(CONFIG_OPPO_16103)
+				qcom,current-ma = <1000>;
+#endif
+
 				qcom,duration-ms = <1280>;
 				qcom,ires-ua = <12500>;
 				qcom,hdrm-voltage-mv = <325>;
@@ -332,12 +336,11 @@
 				qcom,max-current = <1500>;
 				qcom,default-led-trigger = "flash1_trigger";
 				qcom,id = <1>;
-				/*#ifdef VENDOR_EDIT*/
-				/*modify by hongbo.dai@camera,20171213 for dual flash LED*/
-				/*qcom,current-ma = <1000>;*/
-				/*#else*/
+#if defined(CONFIG_OPPO_16051)
 				qcom,current-ma = <750>;
-				/*#endif*/
+#elif defined(CONFIG_OPPO_16103)
+				qcom,current-ma = <1000>;
+#endif
 				qcom,duration-ms = <1280>;
 				qcom,ires-ua = <12500>;
 				qcom,hdrm-voltage-mv = <325>;
@@ -367,7 +370,11 @@
 				/*modify by hongbo.dai@Camera 20171001*/
 				/*qcom,current-ma = <300>;*/
 				/*#else*/
+#if defined(CONFIG_OPPO_16051)
 				qcom,current-ma = <108>;
+#elif defined(CONFIG_OPPO_16103)
+				qcom,current-ma = <180>;
+#endif
 				/*#endif*/
 				qcom,ires-ua = <12500>;
 				qcom,hdrm-voltage-mv = <325>;
@@ -384,7 +391,11 @@
 				/*modify by hongbo.dai@Camera 20171001*/
 				/*qcom,current-ma = <300>;*/
 				/*#else*/
+#if defined(CONFIG_OPPO_16051)
 				qcom,current-ma = <108>;
+#elif defined(CONFIG_OPPO_16103)
+				qcom,current-ma = <180>;
+#endif
 				/*#endif*/
 				qcom,ires-ua = <12500>;
 				qcom,hdrm-voltage-mv = <325>;

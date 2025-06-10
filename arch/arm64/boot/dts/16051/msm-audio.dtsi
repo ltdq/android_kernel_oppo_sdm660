@@ -1003,7 +1003,11 @@
 		 * Add for custom audio.
 		 */
 		oppo,headphone-pa = "akm";
+#if defined(CONFIG_OPPO_16051)
 		oppo,speaker-pa = "nxp";
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+        oppo,speaker-pa = "maxim";
+#endif
 		//#endif /* VENDOR_EDIT */
 	};
 

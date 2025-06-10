@@ -50,7 +50,12 @@
 	qcom,vddp-ref-clk-supply = <&pm660_l1>;
 	qcom,vddp-ref-clk-max-microamp = <100>;
 
+#if defined(CONFIG_OPPO_16051)
 	status = "ok";
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+    status = "disabled";
+#endif
+
 };
 
 &pm660_gpios {
@@ -133,23 +138,61 @@
 //Gou shegnjun@PSW.MM.Display.LCD.Stability, 2017/11/30,
 //add for lcd gpio config
 &mdss_dsi0 {
+#if defined(CONFIG_OPPO_16051)
 	qcom,dsi-pref-prim-pan = <&dsi_oppo16051samsung_ams596w401_1080_2280_cmd>;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+    qcom,dsi-pref-prim-pan = <&dsi_oppo16103jdi_r63452_1080p_cmd>;
+#endif
 	pinctrl-names = "mdss_default", "mdss_sleep";
+#if defined(CONFIG_OPPO_16051)
 	pinctrl-0 = <&mdss_dsi_active &mdss_te_active &mdss_exits_active &mdss_err_active &mdss_poc_1p8_active>;
 	pinctrl-1 = <&mdss_dsi_suspend &mdss_te_suspend &mdss_exits_suspend &mdss_err_suspend &mdss_poc_1p8_suspend>;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+    pinctrl-0 = <&mdss_dsi_active &mdss_te_active &mdss_exits_active &mdss_err_active>;
+	pinctrl-1 = <&mdss_dsi_suspend &mdss_te_suspend &mdss_exits_suspend &mdss_err_suspend>;
+#endif
 	qcom,platform-reset-gpio = <&tlmm 53 0>;
 	qcom,platform-te-gpio = <&tlmm 59 0>;
+#if defined(CONFIG_OPPO_16103)
+	qcom,platform-enable-gpio = <&pm660_gpios 3 0>;     //+5v
+	qcom,platform-bklight-en-gpio = <&pm660_gpios 11 0>; //-5v
+	qcom,platform-lcd-1v8-gpio = <&tlmm 96 0>;    //1.8v
+#endif
 };
 
 &mdss_dsi1 {
 	status = "disabled";
+#if defined(CONFIG_OPPO_16051)
 	qcom,dsi-pref-prim-pan = <&dsi_oppo16051samsung_s6e3fa3_1080p_cmd>;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+    qcom,dsi-pref-prim-pan = <&dsi_dual_nt35597_truly_video>;
+#endif
 	pinctrl-names = "mdss_default", "mdss_sleep";
 	pinctrl-0 = <&mdss_dsi_active &mdss_te_active>;
 	pinctrl-1 = <&mdss_dsi_suspend &mdss_te_suspend>;
 	qcom,platform-reset-gpio = <&tlmm 53 0>;
 	qcom,platform-te-gpio = <&tlmm 59 0>;
 };
+#if defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+&dsi_oppo16103jdi_r63452_1080p_cmd {
+	//qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+	//qcom,cont-splash-enabled;
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_no_labibb>;
+};
+#endif
+#if defined(CONFIG_OPPO_16103)
+&dsi_oppo16051samsung_s6e3fa3_1080p_cmd {
+	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+	//qcom,cont-splash-enabled;
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_no_labibb>;
+};
+#elif defined(CONFIG_OPPO_16118)
+&dsi_oppo16118samsung_s6e3fa3_1080p_cmd {
+	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+	//qcom,cont-splash-enabled;
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_no_labibb>;
+};
+#endif
 //#endif /*VENDOR_EDIT*/
 
 &mdss_dp_ctrl {
@@ -231,9 +274,11 @@
 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_labibb_amoled>;
 };
 
+#if defined(CONFIG_OPPO_16051)
 &dsi_oppo16051samsung_ams596w401_1080_2280_cmd {
 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_labibb_amoled>;
 };
+#endif
 //#endif /*VENDOR_EDIT*/
 &dsi_lgd_incell_sw49106_fhd_video {
 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_wled";
@@ -382,7 +427,7 @@
 	qcom,battery-data = <&mtp_batterydata>;
 };
 
-//#ifdef VENDOR_EDIT
+#if defined defined(CONFIG_OPPO_16051)
 &i2c_1 {
 	//Wanghao@BSP.group 2017-11-01 add for enable i2c_1
 	status = "okay";
@@ -433,6 +478,124 @@
 		touchpanel.button-TRx = <1 2>;
 	};
 };
+#elif defined(CONFIG_OPPO_16103)
+&i2c_1 {
+	//Wanghao@BSP.group 2016-12-20 add for enable i2c_1
+	status = "okay";
+	synaptics16103@20 {
+		compatible = "synaptics-s3320";
+		reg = <0x20>;
+
+		/* Interrupt && Irq-gpio */
+		interrupt-parent = <&tlmm>;
+		interrupts = <67 0x2008>;
+
+		/* Power Config */
+		//enable2v8_gpio = <&tlmm 15 0x1>;
+		//enable1v8_gpio = <&tlmm 96 0x1>;
+		vdd_2v8-supply = <&pm660l_l6>;
+		vcc_1v8-supply = <&touchpanel_vdd>;
+
+		/* Other HW Resource */
+		irq-gpio = <&tlmm 67 0x2008>;
+		reset-gpio = <&tlmm 66 0x1>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&ts_int_active &ts_reset_active>;
+
+		touchpanel,max-num-support = <10>;
+		touchpanel,tx-rx-num = <21 32>;
+		touchpanel,panel-coords = <1080 1920>;
+		touchpanel,display-coords = <1080 1920>;
+
+		/* SW Support Feature Control */
+		black_gesture_support;
+		edge_limit_support;
+		spurious_fingerprint_support;
+		incell_screen;
+		smart_gesture_support;
+
+		/* code flow control params */
+		lcd_trigger_fp_check;
+
+		/*
+		 *Virtual Key Config:
+		 *1:touchpanel,button-type: <virtualkey_type  supportted_button-map>
+		 *virtualkey_type:
+		 *Type 1: using board_properties
+		 *Type 2: using same IC (button zone&& touch zone are seprate)
+		 *Type 3: using diffrent IC (button zone&& touch zone are seprate)
+		 *Type 4: No need of virtual key process
+		 *supportted_button-map:select|menu|home|back
+		 *
+		 *2:touchpanel,button-map
+		 *type (X1,Y1)(X2,Y2)(X3,Y3)(Width_X,Hight_Y)--Only when button-type is 0
+		 */
+		touchpanel,button-type = <2 0x05>;
+	};
+};
+
+//Gou shengjun@PSW.MM.Display.LCD.Stability, 2018/04/03, add for 16103 lcd
+&i2c_8 {
+	status = "okay";
+	ti_lm3697_bl@36 {
+	   compatible = "lm3697";
+	   reg = <0x36>;
+	   ti,bl-enable-gpio = <&pm660_gpios 13 0>;
+	};
+};
+#elif defined(CONFIG_OPPO_16118)
+&i2c_1 {
+	//Wanghao@BSP.group 2016-12-20 add for enable i2c_1
+	status = "okay";
+	synaptics16118@20 {
+		compatible = "synaptics-s3508";
+		reg = <0x20>;
+
+		/* Interrupt && Irq-gpio */
+		interrupt-parent = <&tlmm>;
+		interrupts = <67 0x2008>;
+
+		/* Power Config */
+		//enable2v8_gpio = <&tlmm 15 0x1>;
+		//enable1v8_gpio = <&tlmm 96 0x1>;
+		vdd_2v8-supply = <&touchpanel_vdd>;
+		vcc_1v8-supply = <&pm660_l14>;
+
+		/* Other HW Resource */
+		irq-gpio = <&tlmm 67 0x2008>;
+		reset-gpio = <&tlmm 66 0x1>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&ts_int_active &ts_reset_active>;
+
+		touchpanel,max-num-support = <10>;
+		touchpanel,tx-rx-num = <18 31>;
+		touchpanel,panel-coords = <1080 1920>;
+		touchpanel,display-coords = <1080 1920>;
+
+		/* SW Support Feature Control */
+		black_gesture_support;
+		edge_limit_support;
+		spurious_fingerprint_support;
+		smart_gesture_support;
+
+		/*
+		 *Virtual Key Config:
+		 *1:touchpanel,button-type: <virtualkey_type  supportted_button-map>
+		 *virtualkey_type:
+		 *Type 1: using board_properties
+		 *Type 2: using same IC (button zone&& touch zone are seprate)
+		 *Type 3: using diffrent IC (button zone&& touch zone are seprate)
+		 *Type 4: No need of virtual key process
+		 *supportted_button-map:select|menu|home|back
+		 *
+		 *2:touchpanel,button-map
+		 *type (X1,Y1)(X2,Y2)(X3,Y3)(Width_X,Hight_Y)--Only when button-type is 0
+		 */
+		touchpanel,button-type = <2 0x05>;
+		touchpanel.button-TRx = <1 2>;
+	};
+};
+#endif
 //#endif
 
 //#ifdef VENDOR_EDIT /* Jianchao.Shi@BSP.CHG.Basic, 2016/12/20, sjc Add for charging */
@@ -449,8 +612,10 @@
 		compatible = "oppo,stm8s-fastcg";
 		reg = <0x26>;
 		qcom,oppo_batt_4400mv;
+#if defined(CONFIG_OPPO_16051)
         qcom,vooc-low-temp = <120>;
 		qcom,vooc-fw-type = <5>;
+#endif
 
 		pinctrl-names = "switch1_act_switch2_act", "switch1_sleep_switch2_sleep",
 						"switch1_act_switch3_act", "switch1_sleep_switch3_sleep",
@@ -523,10 +688,19 @@
 		compatible = "akm,ak4376";
 		reg = <0x10>;
 		ak4376,reset-gpio = <&tlmm 76 0x00>;
+#if defined(CONFIG_OPPO_16051)
 		audio-vdd-enable-gpio = <&tlmm 60 0x00>;
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+        ak4376-tvdd-supply = <&pm660_l14>;
+		ak4376-avdd-supply = <&pm660_l14>;
+		//Add for change regulator to LDO8
+		ak4376-tvdd-L8-supply = <&pm660_l8>;
+		ak4376-avdd-L8-supply = <&pm660_l8>;
+#endif
 		status = "okay";
 	};
 
+#if defined(CONFIG_OPPO_16051)
 	tfa98xx@36 {
 		compatible = "nxp,tfa98xx";
 		reg = <0x36>;
@@ -534,5 +708,16 @@
 		tfa9890_vdd-supply = <&pm660_l13>;
 		status = "okay";
 	};
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+	max989xx@3a {
+		compatible = "maxim,max98927L";
+		reg = <0x3a>;
+		mono_stereo_mode = <0>;
+		interleave_mode = <0>;
+		maxim,98927-reset-gpio = <&tlmm 80 0x00>;
+		max989xx_vdd-supply = <&pm660_l13>;
+		status = "okay";
+	};
+#endif
 };
 //#endif /* VENDOR_EDIT */

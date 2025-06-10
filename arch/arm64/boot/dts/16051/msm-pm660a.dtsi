@@ -21,9 +21,17 @@
 };
 
 &pm660a_oledb {
+#if defined(CONFIG_OPPO_16051)
 	status = "okay";
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+    status = "disabled";
+#endif
 };
 
 &pm660a_labibb {
+#if defined(CONFIG_OPPO_16051)
 	status = "okay";
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+    status = "disabled";
+#endif
 };

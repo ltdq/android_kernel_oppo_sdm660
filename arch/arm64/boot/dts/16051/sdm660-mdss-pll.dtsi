@@ -48,7 +48,11 @@
 
 	mdss_dsi1_pll: qcom,mdss_dsi_pll@c996400 {
 		compatible = "qcom,mdss_dsi_pll_sdm660";
+#if defined(CONFIG_OPPO_16051)
 		status = "ok";
+#elif defined(CONFIG_OPPO_16103) || defined(CONFIG_OPPO_16118)
+        status = "disabled";
+#endif
 		label = "MDSS DSI 1 PLL";
 		cell-index = <1>;
 		#clock-cells = <1>;
